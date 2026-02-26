@@ -1,20 +1,20 @@
 pipeline {
     agent any
+    tools {
+          maven 'Add Maven'
+    }
     stages {
         stage('Build') {
             steps {
+               sh 'mvn clean package'
                echo 'Hello from Jenkins Pipeline! Build'
             }
-        }
-        stage('Test') {
-            steps {
-                echo 'Hello from Jenkins Pipeline! Test'
+            post {
+              success {
+                 archiveArtifacts artifacts: '**/traget/*.war
             }
         }
-        stage('Deliver') { 
-            steps {
-                echo 'Hello from Jenkins Pipeline! Deploy'
-            }
+
         }
     }
 }
