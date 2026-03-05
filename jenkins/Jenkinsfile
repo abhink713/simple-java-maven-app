@@ -8,7 +8,6 @@ pipeline {
 
     tools {
           maven 'Add Maven'
-          sonar 'SonarScanner' // NOT sonarQubeScanner
     }
     stages {
         stage('Build') {
