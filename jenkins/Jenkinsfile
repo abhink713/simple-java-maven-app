@@ -25,16 +25,18 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 // 'MySonarQubeServer' must match the SonarQube config name in Jenkins
-                 sh """
-            sonar-scanner \
-            -Dsonar.projectKey=my-sample-project \
-            -Dsonar.projectName='My Sample Project' \
-            -Dsonar.projectVersion=1.0 \
-            -Dsonar.sources=src \
-            -Dsonar.host.url=${SONAR_HOST_URL} \
-            -Dsonar.login=${SONAR_TOKEN} \
-            -Dsonar.java.binaries=build/classes
-        """
+               withSonarQubeEnv('sonarqube') {
+            sh """
+                sonar-scanner \
+                -Dsonar.projectKey=my-sample-project \
+                -Dsonar.projectName='My Sample Project' \
+                -Dsonar.projectVersion=1.0 \
+                -Dsonar.sources=src \
+                -Dsonar.host.url=${SONAR_HOST_URL} \
+                -Dsonar.login=${SONAR_TOKEN} \
+                -Dsonar.java.binaries=build/classes
+            """
+        }
             }
         }
     }
