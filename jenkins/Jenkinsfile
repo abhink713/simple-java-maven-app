@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         // Dynamic environment variables
-        SONAR_HOST_URL = 'http://localhost:9001/'
+        SONAR_HOST_URL = 'https://daniel-unmaturative-overnarrowly.ngrok-free.dev'
         SONAR_TOKEN = credentials('sonarqube') // Jenkins credentials ID
     }
 
