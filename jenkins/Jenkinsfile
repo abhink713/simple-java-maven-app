@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    environment {
+        // Dynamic environment variables
+        SONAR_HOST_URL = 'http://localhost:9001/'
+        SONAR_TOKEN = credentials('sonarqube') // Jenkins credentials ID
+    }
+
     tools {
           maven 'Add Maven'
     }
@@ -15,6 +21,23 @@ pipeline {
             }
         }
 
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                // 'MySonarQubeServer' must match the SonarQube config name in Jenkins
+                withSonarQubeEnv('MySonarQubeServer') {
+                    sh """
+                        sonar-scanner \
+                        -Dsonar.projectKey=my-sample-project \
+                        -Dsonar.projectName='My Sample Project' \
+                        -Dsonar.projectVersion=1.0 \
+                        -Dsonar.sources=src \
+                        -Dsonar.host.url=${SONAR_HOST_URL} \
+                        -Dsonar.login=${SONAR_TOKEN} \
+                        -Dsonar.java.binaries=build/classes
+                    """
+                }
+            }
         }
     }
 }
