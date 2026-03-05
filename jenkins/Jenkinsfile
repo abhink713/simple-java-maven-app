@@ -26,16 +26,17 @@ pipeline {
             steps {
                 // 'MySonarQubeServer' must match the SonarQube config name in Jenkins
                withSonarQubeEnv('sonarqube') {
-            sh """
-                sonar-scanner \
-                -Dsonar.projectKey=my-sample-project \
-                -Dsonar.projectName='My Sample Project' \
-                -Dsonar.projectVersion=1.0 \
-                -Dsonar.sources=src \
-                -Dsonar.host.url=${SONAR_HOST_URL} \
-                -Dsonar.login=${SONAR_TOKEN} \
-                -Dsonar.java.binaries=build/classes
-            """
+            sh '''
+                        docker run --rm \
+                        -e SONAR_HOST_URL=$SONAR_HOST_URL \
+                        -e SONAR_LOGIN=$SONAR_TOKEN \
+                        -v $(pwd):/usr/src \
+                        sonarsource/sonar-scanner-cli \
+                        -Dsonar.projectKey=my-sample-project \
+                        -Dsonar.projectName='My Sample Project' \
+                        -Dsonar.sources=src \
+                        -Dsonar.java.binaries=target/classes
+                    '''
         }
             }
         }
